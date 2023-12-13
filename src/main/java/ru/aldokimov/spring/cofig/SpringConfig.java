@@ -7,7 +7,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,27 +22,31 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 import javax.sql.DataSource;
-import java.sql.DriverManager;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 @Configuration
 @ComponentScan("ru.aldokimov.spring")
 @EnableWebMvc
+@EnableTransactionManagement
 @PropertySource("classpath:hibernate.properties")
-
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Environment env;
+
     @Autowired
     public SpringConfig(ApplicationContext applicationContext, Environment env) {
         this.applicationContext = applicationContext;
         this.env = env;
     }
 
+
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
-        templateResolver.setPrefix("/WEB-INF/views/");
+        templateResolver.setPrefix("/WEB-INF/views/users");
         templateResolver.setSuffix(".html");
         templateResolver.setOrder(0);
         return templateResolver;
@@ -57,6 +67,7 @@ public class SpringConfig implements WebMvcConfigurer {
         registry.viewResolver(resolver);
     }
 
+    @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
@@ -67,5 +78,45 @@ public class SpringConfig implements WebMvcConfigurer {
 
         return dataSource;
     }
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em =
+                new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan(env.getRequiredProperty("hibernate.model.package"));
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        em.setJpaProperties(getHibernateProperties());
+        return em;
+    }
+
+    private Properties getHibernateProperties() {
+        try {
+        Properties properties =new Properties();
+        InputStream is = getClass().getClassLoader().getResourceAsStream("hb.properties");
+        properties.load(is);
+
+        return properties;
+        } catch (IOException e) {
+            try {
+                throw new IllegalAccessException("Can't find 'hibernate.properties' in classpath!");
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+
+        return transactionManager;
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
 
 }
