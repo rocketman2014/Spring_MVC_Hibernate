@@ -1,21 +1,19 @@
 package ru.aldokimov.spring.model;
 
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import org.springframework.stereotype.Component;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "User")
-@Component
+@Table(name = "Users")
 public class User {
     @Id
     @Column(name = "id")
@@ -25,10 +23,10 @@ public class User {
     @NotEmpty(message = "The name must not be empty.")
     @Size(min = 2, max = 30, message = "The name must be between 2 and 30 characters.")
     private String name;
-    @Column(name = "surename")
+    @Column(name = "surname")
     @NotEmpty(message = "The username must not be empty.")
     @Size(min = 2, max = 30, message = "The username must be between 2 and 30 characters.")
-    private String sureName;
+    private String surName;
     @Column(name = "age")
     @Min(value = 0, message = "Age must be greater than 0.")
     private byte age;
@@ -40,7 +38,7 @@ public class User {
     public User(Long id, String name, String sureName, byte age) {
         this.id = id;
         this.name = name;
-        this.sureName = sureName;
+        this.surName = sureName;
         this.age = age;
     }
 
@@ -60,12 +58,12 @@ public class User {
         this.name = name;
     }
 
-    public String getSureName() {
-        return sureName;
+    public String getSurName() {
+        return surName;
     }
 
     public void setSureName(String sureName) {
-        this.sureName = sureName;
+        this.surName = sureName;
     }
 
     public byte getAge() {
@@ -83,7 +81,19 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public User() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", sureName='" + surName + '\'' +
+               ", age=" + age +
+               ", email='" + email + '\'' +
+               '}';
     }
 }
