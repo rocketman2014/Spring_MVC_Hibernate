@@ -35,10 +35,10 @@ public class User {
     @NotEmpty(message = "Email must not be empty.")
     private String email;
 
-    public User(Long id, String name, String sureName, byte age) {
+    public User(Long id, String name, String surName, byte age) {
         this.id = id;
         this.name = name;
-        this.surName = sureName;
+        this.surName = surName;
         this.age = age;
     }
 
