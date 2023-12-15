@@ -33,7 +33,9 @@ public class SpringInit extends AbstractAnnotationConfigDispatcherServletInitial
     @Override
     public void onStartup(ServletContext aServletContext) throws ServletException {
         super.onStartup(aServletContext);
+        registerCharacterEncodingFilter(aServletContext);
         registerHiddenFieldFilter(aServletContext);
+
     }
 
     private void registerHiddenFieldFilter(ServletContext aContext) {

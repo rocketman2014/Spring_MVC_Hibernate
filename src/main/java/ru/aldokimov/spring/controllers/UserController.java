@@ -32,31 +32,31 @@ public class UserController {
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("user", userService.findAll());
-        return "users/index";
+        return "user/index";
     }
 
-    @GetMapping("/{id}")
-    public String show(@RequestParam Long id, Model model) {
+    @GetMapping("/show")
+    public String show(@RequestParam("id") Long id, Model model) {
         model.addAttribute("user", userService.findOne(id));
-        return "users/show";
+        return "user/show";
     }
 
     @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user) {
-    return "users/new";
+    return "user/new";
     }
 
     @PostMapping()
     public String create(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "users/new";
+            return "user/new";
         userService.save(user);
         return "redirect:/user";
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestParam Long id) {
+    public String delete(@RequestParam("id") Long id) {
         userService.delete(id);
         return "redirect:/user";
     }
@@ -64,17 +64,17 @@ public class UserController {
     @PostMapping("/{id}")
     public String update(@ModelAttribute("update") @Valid User user,
                          BindingResult bindingResult,
-                         @RequestParam Long id) {
+                         @RequestParam("id") Long id) {
         if (bindingResult.hasErrors())
-            return "users/edit";
+            return "user/edit";
 
         userService.update(id, user);
         return "redirect:/user";
     }
 
     @GetMapping("/edit")
-    public String edit(Model model, @RequestParam Long id) {
+    public String edit(Model model, @RequestParam("id") Long id) {
         model.addAttribute("user", userService.findOne(id));
-        return "users/edit";
+        return "user/edit";
     }
 }

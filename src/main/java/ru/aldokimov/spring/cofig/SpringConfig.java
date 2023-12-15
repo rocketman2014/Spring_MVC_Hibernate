@@ -92,7 +92,8 @@ public class SpringConfig implements WebMvcConfigurer {
         em.setDataSource(dataSource());
         em.setPackagesToScan("ru.aldokimov.spring.model");
 
-        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(hibernateProperties());
 
         return em;
