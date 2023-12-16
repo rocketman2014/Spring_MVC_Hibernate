@@ -1,8 +1,5 @@
 package ru.aldokimov.spring.controllers;
 
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,8 +17,8 @@ import ru.aldokimov.spring.service.UserServiceImpl;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    @PersistenceContext
-    private EntityManager entityManager;
+//    @PersistenceContext
+//    private EntityManager entityManager;
     private final UserServiceImpl userService;
 
     @Autowired
@@ -43,7 +40,7 @@ public class UserController {
 
     @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user) {
-    return "user/new";
+        return "user/new";
     }
 
     @PostMapping()
