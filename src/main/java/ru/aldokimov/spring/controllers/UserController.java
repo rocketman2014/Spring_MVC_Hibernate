@@ -17,7 +17,7 @@ import ru.aldokimov.spring.service.UserServiceImpl;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-//    @PersistenceContext
+    //    @PersistenceContext
 //    private EntityManager entityManager;
     private final UserServiceImpl userService;
 
