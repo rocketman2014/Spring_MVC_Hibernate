@@ -17,8 +17,6 @@ import ru.aldokimov.spring.service.UserServiceImpl;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-//    @PersistenceContext
-//    private EntityManager entityManager;
     private final UserServiceImpl userService;
 
     @Autowired
@@ -44,10 +42,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "user/new";
+    public String create(@ModelAttribute("user")  User user) {
         userService.save(user);
         return "redirect:/user";
     }
@@ -59,12 +54,8 @@ public class UserController {
     }
 
     @PostMapping("/{id}")
-    public String update(@ModelAttribute("update") @Valid User user,
-                         BindingResult bindingResult,
+    public String update(@ModelAttribute("update") User user,
                          @RequestParam("id") Long id) {
-        if (bindingResult.hasErrors())
-            return "user/edit";
-
         userService.update(id, user);
         return "redirect:/user";
     }
