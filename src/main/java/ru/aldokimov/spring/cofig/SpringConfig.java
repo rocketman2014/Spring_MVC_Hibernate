@@ -27,7 +27,7 @@ import java.util.Properties;
 @ComponentScan("ru.aldokimov.spring")
 @EnableWebMvc
 @EnableTransactionManagement
-@EnableJpaRepositories("ru.aldokimov.spring.repository")
+@EnableJpaRepositories("ru.aldokimov.spring.dao")
 @PropertySource("classpath:hibernate.properties")
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;

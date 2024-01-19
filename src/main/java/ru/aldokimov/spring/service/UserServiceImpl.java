@@ -3,8 +3,8 @@ package ru.aldokimov.spring.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.aldokimov.spring.dao.UserDAOImp;
 import ru.aldokimov.spring.model.User;
-import ru.aldokimov.spring.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,20 +12,20 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class UserServiceImpl {
-    private final UserRepository userRepository;
+    private final UserDAOImp userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserDAOImp userRepository) {
         this.userRepository = userRepository;
     }
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userRepository.getAll();
     }
 
     public User findOne(Long id) {
-        Optional<User> foundUser = userRepository.findById(id);
-        return foundUser.orElse(null);
+        Optional<User> foundUser = Optional.ofNullable(userRepository.findById(id));
+        return foundUser.orElse(new User());
     }
 
     @Transactional
@@ -41,6 +41,6 @@ public class UserServiceImpl {
 
     @Transactional
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        userRepository.delete(id);
     }
 }
